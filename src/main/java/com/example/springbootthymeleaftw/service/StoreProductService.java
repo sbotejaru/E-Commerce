@@ -25,4 +25,8 @@ public class StoreProductService {
     public void save(StoreProduct storeProduct) {
         storePr.save(storeProduct);
     }
+
+    public Long getMaxId() {
+        return storePr.getMaxId();
+    }
 }

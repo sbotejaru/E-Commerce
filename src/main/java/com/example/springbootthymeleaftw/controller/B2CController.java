@@ -1,9 +1,6 @@
 package com.example.springbootthymeleaftw.controller;
 
-import com.example.springbootthymeleaftw.model.entity.Store;
-import com.example.springbootthymeleaftw.model.entity.UserEntity;
-import com.example.springbootthymeleaftw.model.entity.Warehouse;
-import com.example.springbootthymeleaftw.model.entity.WarehouseStore;
+import com.example.springbootthymeleaftw.model.entity.*;
 import com.example.springbootthymeleaftw.repository.WarehouseProductRepository;
 import com.example.springbootthymeleaftw.service.*;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ public class B2CController {
     private final WarehouseService warehouseService;
     private final WarehouseStoreService warehouseStoreService;
     private final WarehouseProductService warehouseProductService;
+    private final ProductService productService;
     private Store store;
 
     @GetMapping()
@@ -62,7 +60,7 @@ public class B2CController {
     public String onBuyRequest(@RequestParam Long warehouseProductId) {
         var warehouseProd = warehouseProductService.getWarehouseProductById(warehouseProductId);
         Long prodId = warehouseProd.getProduct().getId();
-        Long storeId = store.getId(); // only one store for b2c so it works
+        Long storeId = store.getId();
         var storeProd = storePrService.getStoreProdByStoreAndProdId(storeId, prodId);
 
         long quantity = 100L;
@@ -74,7 +72,15 @@ public class B2CController {
             warehouseProd.setQuantity(0L);
         }
 
-        storeProd.setQuantity(storeProd.getQuantity() + quantity);
+        if (storeProd == null) {
+            storeProd = new StoreProduct();
+            storeProd.setId(storePrService.getMaxId() + 1);
+            storeProd.setStore(store);
+            storeProd.setProduct(warehouseProd.getProduct());
+            storeProd.setQuantity(quantity);
+        }
+        else
+            storeProd.setQuantity(storeProd.getQuantity() + quantity);
 
         warehouseProductService.save(warehouseProd);
         storePrService.save(storeProd);

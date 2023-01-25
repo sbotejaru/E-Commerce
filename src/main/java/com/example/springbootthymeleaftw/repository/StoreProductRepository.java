@@ -4,6 +4,7 @@ import com.example.springbootthymeleaftw.model.entity.Store;
 import com.example.springbootthymeleaftw.model.entity.StoreProduct;
 import com.example.springbootthymeleaftw.model.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Array;
@@ -19,4 +20,7 @@ public interface StoreProductRepository extends JpaRepository<StoreProduct, Long
     ArrayList<StoreProduct> getStoreProductsByStoreId(Long id);
 
     StoreProduct getStoreProductByStoreIdAndProductId(Long id1, Long id2);
+
+    @Query("SELECT max(id) FROM StoreProduct")
+    Long getMaxId();
 }
