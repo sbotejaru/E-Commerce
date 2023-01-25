@@ -15,13 +15,10 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class B2BController {
     private final SecurityService securityService;
-    private final StoreService storeService;
-    private final StoreProductService storePrService;
     private final WarehouseService warehouseService;
     private final WarehouseStoreService warehouseStoreService;
     private final WarehouseProductService warehouseProductService;
     private Warehouse warehouse;
-    private Long addStockQuantity;
 
     public class AddStock{
         public Long value;
