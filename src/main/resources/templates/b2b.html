@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:include="fragments/components::header"></div>
+    <title>B2C Admin Page</title>
+</head>
+<body>
+<h3 th:align="center">Warehouse manager page</h3>
+<div style="
+     display:inline-block;
+        position:relative;
+     top:3vh;
+       left:3vh;">
+    <form method="POST" th:action="@{/logout}">
+        <button class="btn btn-primary btn-lg"
+                type="submit"
+                style="margin-top:30px">
+            Log Out
+        </button>
+    </form>
+</div>
+
+<div class="container mt-5 h-25">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <table class="table"
+               style="
+            height: auto;
+            width: 100%;
+            overflow-y: scroll;
+            ">
+            <thead>
+            <tr>
+                <td style="text-align: center;
+                font-weight: bold;
+                color: seagreen;
+"
+                    colspan="5"><span th:text="${warehouse.name}"></span></td>
+            </tr>
+            <tr>
+                <th scope="col">Product name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="warehouseProd :${warehouse.warehouseProducts}">
+                <td><span th:text="${warehouseProd.product.name}"></span></td>
+                <td><span th:text="${warehouseProd.product.price}"></span></td>
+                <td><span th:text="${warehouseProd.quantity}"></span></td>
+                <td style="display: flex;
+                       align-content: center;">
+                    <form style="margin: 0px 10px"
+                          method="POST" th:action="@{/b2b/add(warehouseProductId = ${warehouseProd.id})}" th:object="${addStock}">
+                        <input type="number" id="addStock" name="addStock" th:field="*{value}">
+                        <button class="btn btn-success" type="submit">Add to stock</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3 th:align="center">Your store connections</h3>
+
+<div class="container mt-5 h-25">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <table class="table"
+               style="
+            height: auto;
+            width: 100%;
+            overflow-y: scroll;">
+            <thead>
+            <tr>
+                <td style="text-align: center;
+                font-weight: bold;
+                color: seagreen;
+"
+                    colspan="3"> Pending requests</span></td>
+            </tr>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+<!--                <th scope="col"></th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="warehouseStore :${warehouse.warehouseStores}" th:if="${warehouseStore.status!='None'}">
+                <td><span th:text="${warehouseStore.store.name}"></span></td>
+                <td><span th:text="${warehouseStore.status}"></span></td>
+                <td style="display: flex;
+                       align-content: center;">
+                    <form style="margin: 0px 10px"
+                          method="POST" th:action="@{b2b/accept(warehouseStoreId = ${warehouseStore.id})}">
+                        <button class="btn btn-success" type="submit"
+                                th:if="${warehouseStore.status=='Pending'}">Accept</button>
+
+                    </form>
+                    <form style="margin: 0px 10px"
+                          method="POST" th:action="@{b2b/deny(warehouseStoreId = ${warehouseStore.id})}">
+                        <button class="btn btn-danger" type="submit"
+                                th:if="${warehouseStore.status=='Pending'}">Deny</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

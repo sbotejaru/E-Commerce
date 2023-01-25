@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:include="fragments/components::header"></div>
+    <title>B2C Admin Page</title>
+</head>
+<body>
+<h3 th:align="center">Store manager page</h3>
+<div style="
+     display:inline-block;
+        position:relative;
+     top:3vh;
+       left:3vh;">
+    <form method="POST" th:action="@{/logout}">
+        <button class="btn btn-primary btn-lg"
+                type="submit"
+                style="margin-top:30px">
+            Log Out
+        </button>
+    </form>
+</div>
+
+<div class="container mt-5 h-25">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <table class="table"
+               style="
+            height: auto;
+            width: 100%;
+            overflow-y: scroll;
+            "
+               th:each="store :${stores}">
+            <thead>
+            <tr>
+                <td style="text-align: center;
+                font-weight: bold;
+                color: seagreen;
+"
+                    colspan="5"><span th:text="${store.name}"></span></td>
+            </tr>
+            <tr>
+                <th scope="col">Product name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${stores.empty}">
+                <td  style="text-align: center"
+                     colspan="5"
+
+                > No stores to manage
+                </td>
+            </tr>
+            <tr th:each="prod :${store.storeProducts}">
+                <td><span th:text="${prod.product.name}"></span></td>
+                <td><span th:text="${prod.product.price}"></span></td>
+                <td><span th:text="${prod.quantity}"></span></td>
+                <td style="display: flex;
+                       align-content: center;">
+<!--                    <form style="margin: 0px 10px"-->
+<!--                          method="POST" th:action="@{/client/buy(storeProductId = ${prod.id})}">-->
+<!--                        &lt;!&ndash;th:action="@{/admin/store(storeId=${store.id},approve='True')}">&ndash;&gt;-->
+<!--                        <input>-->
+<!--                        <button class="btn btn-success" type="submit"-->
+<!--                                th:if="${prod.quantity!=0}">Submit Stock</button>-->
+<!--                    </form>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container mt-5 h-25">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <table class="table"
+               style="
+            height: auto;
+            width: 100%;
+            overflow-y: scroll;">
+            <thead>
+            <tr>
+                <td style="text-align: center;
+                font-weight: bold;
+                color: seagreen;
+"
+                    colspan="3"> All Warehouses</span></td>
+            </tr>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+<!--                <th scope="col"></th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${warehouses.empty}">
+                <td  style="text-align: center"
+                     colspan="3"
+
+                > No Warehouses
+                </td>
+            </tr>
+            <tr th:each="warehouseStore :${stores[0].warehouseStores}">
+                <td><span th:text="${warehouseStore.warehouse.name}"></span></td>
+                <td><span th:text="${warehouseStore.warehouse.active}"></span></td>
+                <td style="display: flex;
+                       align-content: center;">
+                    <form style="margin: 0px 10px"
+                          method="POST" th:action="@{b2c/link(warehouseStoreId = ${warehouseStore.id})}">
+                        <label
+                                th:if="${warehouseStore.status=='Pending'}">Pending</label>
+                        <label
+                                th:if="${warehouseStore.status=='Linked'}">Linked</label>
+                        <button class="btn btn-success" type="submit"
+                                th:if="${warehouseStore.status=='None'}">Request</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3 th:align="center">Your warehouse connections</h3>
+
+<div class="container mt-5 h-25">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <table class="table"
+               style="
+            height: auto;
+            width: 100%;
+            overflow-y: scroll;"
+            th:each="warehouseStore: ${warehouseStores}">
+            <thead>
+            <tr>
+                <td style="text-align: center;
+                font-weight: bold;
+                color: seagreen;
+"
+                    colspan="4"><span th:text="${warehouseStore.warehouse.name}"></span></td>
+            </tr>
+            <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${warehouseStores.empty}">
+                <td  style="text-align: center"
+                     colspan="4"
+                > No Warehouses
+                </td>
+            </tr>
+            <tr th:each="warehouseProduct: ${warehouseStore.getWarehouse().warehouseProducts}">
+                <td><span th:text="${warehouseProduct.product.name}"></span></td>
+                <td><span th:text="${warehouseProduct.product.price}"></span></td>
+                <td><span th:text="${warehouseProduct.quantity}"></span></td>
+                <td style="display: flex;
+                       align-content: center;">
+                    <form style="margin: 0px 10px"
+                          method="POST" th:action="@{b2c/buy(warehouseProductId = ${warehouseProduct.id})}">
+                        <label
+                                th:if="${warehouseProduct.quantity==0}">Out of stock</label>
+                        <button class="btn btn-success" type="submit"
+                                th:if="${warehouseProduct.quantity!=0}">Buy 100</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
