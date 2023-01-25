@@ -26,8 +26,7 @@ public class B2CController {
     private final WarehouseService warehouseService;
     private final WarehouseStoreService warehouseStoreService;
     private final WarehouseProductService warehouseProductService;
-    private ArrayList<Store> stores;
-    private final WarehouseProductRepository warehouseProductRepository;
+    private Store store;
 
     @GetMapping()
     public String open(Model model){
@@ -37,10 +36,10 @@ public class B2CController {
 
         UserEntity user = securityService.getUserEntity();
 
-        stores = storeService.getAllStoresByAdminId(user.getId());
+        store = storeService.getAllStoresByAdminId(user.getId()).get(0);
         ArrayList<Warehouse> warehouses = warehouseService.getAllActiveWarehouses();
-        ArrayList<WarehouseStore> warehouseStores = warehouseStoreService.getWarehouseStoreByStatus("Linked");
-        model.addAttribute("stores", stores);
+        ArrayList<WarehouseStore> warehouseStores = warehouseStoreService.getWarehouseStoreByStatusAndId("Linked", store.getId());
+        model.addAttribute("store", store);
         model.addAttribute("warehouses", warehouses);
         model.addAttribute("warehouseStores", warehouseStores);
 
@@ -63,7 +62,7 @@ public class B2CController {
     public String onBuyRequest(@RequestParam Long warehouseProductId) {
         var warehouseProd = warehouseProductService.getWarehouseProductById(warehouseProductId);
         Long prodId = warehouseProd.getProduct().getId();
-        Long storeId = stores.get(0).getId(); // only one store for b2c so it works
+        Long storeId = store.getId(); // only one store for b2c so it works
         var storeProd = storePrService.getStoreProdByStoreAndProdId(storeId, prodId);
 
         long quantity = 100L;

@@ -19,5 +19,7 @@ public interface WarehouseStoreRepository extends JpaRepository<WarehouseStore, 
 
     ArrayList<WarehouseStore> getWarehouseStoreById(Long id);
 
-    ArrayList<WarehouseStore> getWarehouseStoreByStatus(String status);
+    ArrayList<WarehouseStore> getWarehouseStoreByStatusAndStoreId(String status, Long storeId);
+
+    ArrayList<WarehouseStore> getWarehouseStoresByStatus(String status);
 }

@@ -103,6 +103,13 @@
                         <button class="btn btn-danger" type="submit"
                                 th:if="${warehouseStore.status=='Pending'}">Deny</button>
                     </form>
+
+                    </form>
+                    <form style="margin: 0px 10px"
+                          method="POST" th:action="@{b2b/deny(warehouseStoreId = ${warehouseStore.id})}">
+                        <button class="btn btn-danger" type="submit"
+                                th:if="${warehouseStore.status=='Linked'}">Cancel</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

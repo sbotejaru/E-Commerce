@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
 
     public void save(UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Optional<RoleEntity> optionalRole = roleRepository.findRoleEntityByName("B2C");
+        Optional<RoleEntity> optionalRole = roleRepository.findRoleEntityByName("Client");
 
         user.setRole(optionalRole.get());
         userRepository.save(user);

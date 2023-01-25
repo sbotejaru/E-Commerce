@@ -25,7 +25,11 @@ public class WarehouseStoreService {
         warehouseStoreRepository.save(warehouseStore);
     }
 
-    public ArrayList<WarehouseStore> getWarehouseStoreByStatus(String status) {
-        return warehouseStoreRepository.getWarehouseStoreByStatus(status);
+    public ArrayList<WarehouseStore> getWarehouseStoreByStatusAndId(String status, Long id) {
+        return warehouseStoreRepository.getWarehouseStoreByStatusAndStoreId(status, id);
+    }
+
+    public ArrayList<WarehouseStore> getWarehouseStoresByStatus(String status) {
+        return warehouseStoreRepository.getWarehouseStoresByStatus(status);
     }
 }

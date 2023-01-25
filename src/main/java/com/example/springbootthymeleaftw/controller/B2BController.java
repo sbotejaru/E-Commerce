@@ -47,7 +47,7 @@ public class B2BController {
 
         UserEntity user = securityService.getUserEntity();
 
-        ArrayList<WarehouseStore> warehouseStores = warehouseStoreService.getWarehouseStoreByStatus("Linked");
+        ArrayList<WarehouseStore> warehouseStores = warehouseStoreService.getWarehouseStoresByStatus("Linked");
         model.addAttribute("warehouseStores", warehouseStores);
 
         warehouse = warehouseService.getAllWarehousesByAdminId(user.getId()).get(0);
